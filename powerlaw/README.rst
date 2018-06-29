@@ -31,17 +31,19 @@ In powerlaw.stan::
 		}
 	}
 	parameters {
-		real<lower=-10,upper=10> lo;
-		real<lower=-10, upper=10> slope;
+		real<lower=0,upper=10> loglo;
+		real<lower=-10, upper=0> slope;
 	}
 	model {
-		samples ~ pareto(lo, -slope);
+		samples ~ pareto(pow(10, loglo), -slope);
 	}
+
+
 
 Fairly straightforward. The data are transformed from log to real space.
 
 The model parameters are the powerlaw slope and the minimal value.
-Th Likelihood is defined by saying the samples are pareto (powerlaw) distributed.
+The likelihood is defined by saying the samples are pareto (powerlaw) distributed.
 
 Running
 -----------
@@ -61,16 +63,41 @@ Output
 powerlaw_output.csv now contains::
 
 	...
-	lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,n_divergent__,lo,slope
-	-2523.28,0.970059,0.220458,2,3,0,5.81156,-0.0568428
-	-2522.65,0.998603,0.220458,4,11,0,9.57576,-0.0477233
-	-2523.22,0.861687,0.220458,3,5,0,9.29969,-0.0615979
-	-2522.66,0.934137,0.220458,2,3,0,9.38969,-0.059013
-	-2522.12,0.896024,0.220458,2,3,0,9.47444,-0.0505672
+	lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,n_divergent__,loglo,slope
+	...
+	-2366.79,0.888888,0.0263503,4,9,1,9.00168,-8.0372
+	-2367.48,0.964285,0.0263503,5,28,1,9.00126,-8.03529
+	-2367.34,1,0.0263503,3,7,0,9.00133,-8.03521
+	-2366.78,0.923077,0.0263503,4,13,1,9.00162,-8.03436
+	-2366.16,0.8,0.0263503,3,5,1,9.00194,-8.03394
+	-2366.02,0.857143,0.0263503,3,7,1,9.00201,-8.03361
 	...
 
 Most of the columns we can ignore. The last two are samples of our two model parameters.
 
-lo was correctly recovered (input value: 9). slope however should be -2.
+Lets plot the slope samples:
+	
+	.. image:: samples_1000.png
+
+
+Stan is slowly converging towards the true value (-2). 
+We need to either give better prior limits or run longer!
+
+Longer sampling:
+
+	.. image:: samples_10000.png
+
+This is better.
+
+The trick is to tell Stan to do a longer warm-up, with::
+
+	./powerlaw data file=data.stan.rdata output file=powerlaw_output.csv sample num_warmup=10000 num_samples=10000
+
+This gives a well-sampled posterior:
+
+	.. image:: sampling_long_warmup.png
+	.. image:: posterior_long_warmup.png
+
+The true valus were -2 and 9, and this falls well within the samples.
 
 

@@ -10,11 +10,11 @@ transformed data {
 	}
 }
 parameters {
-	real<lower=-10,upper=10> lo;
-	real<lower=-10, upper=10> slope;
+	real<lower=0,upper=10> loglo;
+	real<lower=-10, upper=0> slope;
 }
 model {
-	samples ~ pareto(lo, -slope);
+	samples ~ pareto(pow(10, loglo), -slope);
 }
 
 
