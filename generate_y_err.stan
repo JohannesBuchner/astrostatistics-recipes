@@ -1,13 +1,14 @@
 
-transformed data {
+data {
 
   // example parameters for the
   // generated data
-  real<lower=0> sigma = 1;
-  real slope = 2.;
-  real intercept = 1.;
-  int<lower=0> n_obs = 25;
-  
+  real<lower=0> sigma;
+  real slope;
+  real intercept;
+  int<lower=0> n_obs;
+  real x_min;
+  real x_max;
 }
 
 generated quantities {
@@ -21,7 +22,7 @@ generated quantities {
   for (n in 1:N) {
 
     // randomly pull x from a uniform distribution
-    x_obs[n] = uniform_rng(0, 10);
+    x_obs[n] = uniform_rng(x_min, x_max);
 
     // calculate the latent y 
     y_latent[n] = slope * x_obs[n] + intercept;

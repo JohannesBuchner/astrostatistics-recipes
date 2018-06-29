@@ -6,7 +6,7 @@ data {
   real<lower=0> sigma; // homoskedastic measurement error
 
   int<lower=0> N_model; // number of data points for line
-  vector[N_model] x_model;
+  vector[N_model] x_model; //where to evaluate the model
 
 }
 
