@@ -77,7 +77,7 @@ Most of the columns we can ignore. The last two are samples of our two model par
 
 Lets plot the slope samples:
 	
-	.. image:: samples_1000.png
+	.. image:: sampling_1000.png
 
 
 Stan is slowly converging towards the true value (-2). 
@@ -85,7 +85,7 @@ We need to either give better prior limits or run longer!
 
 Longer sampling:
 
-	.. image:: samples_10000.png
+	.. image:: sampling_10000.png
 
 This is better.
 
